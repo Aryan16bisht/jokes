@@ -17,8 +17,9 @@ function Home() {
   const handleSearch = async () => {
     try {
       const joke = await fetchRandomJoke(searchTerm); 
-      if(joke.lenght>0){
-        setJokes([joke, ...jokes]); 
+
+      if(joke.length>0){
+        setJokes([...joke, ...jokes]); 
       }
       else{
         throw error;
