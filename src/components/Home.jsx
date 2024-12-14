@@ -3,18 +3,32 @@ import { TextField, Button, Typography, Card, CardContent, CardMedia, IconButton
 import { fetchRandomJoke, fetchFavorites, toggleFavorite } from '../api/api'; 
 import FavoriteIcon from '@mui/icons-material/Favorite'; 
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from "notistack";
+
+
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState(''); 
   const [jokes, setJokes] = useState([]); 
   const [favorites, setFavorites] = useState([]); 
   const navigate = useNavigate(); 
+  const { enqueueSnackbar } = useSnackbar(); 
 
   const handleSearch = async () => {
     try {
-      const joke = await fetchRandomJoke(); 
-      setJokes([joke, ...jokes]); 
+      const joke = await fetchRandomJoke(searchTerm); 
+      if(joke.lenght>0){
+        setJokes([joke, ...jokes]); 
+      }
+      else{
+        throw error;
+      }
+     
     } catch (error) {
+      enqueueSnackbar("no joke found", {
+        variant: "error",
+      });
+
       console.error('Error fetching jokes:', error);
     }
   };
@@ -48,7 +62,7 @@ function Home() {
   useEffect(() => {
     const fetchInitialJokes = async () => {
       try {
-        const randomJokes = await Promise.all(Array.from({ length: 10 }, fetchRandomJoke)); 
+        const randomJokes = await  fetchRandomJoke(""); 
         setJokes(randomJokes); 
         console.log(randomJokes);
       } catch (error) {

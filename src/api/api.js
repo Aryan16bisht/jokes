@@ -2,23 +2,20 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:5000/api';
 
-
-export const fetchRandomJoke = async () => {
-  try {
-    const response = await axios.get('https://icanhazdadjoke.com/', {
-      headers: {
-        'Accept': 'application/json', 
-        'User-Agent': 'My Joke App (https://github.com/username/repo)', 
-      },
-    });
-    console.log(response)
-    return response.data; 
-  } catch (error) {
-    console.error('Error fetching joke:', error); 
-    throw error; 
-  }
-};
-
+export const fetchRandomJoke = async (searchTerm) => { // Added searchTerm parameter
+    try {
+      const response = await axios.get(`https://icanhazdadjoke.com/search?term=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+          'Accept': 'application/json', 
+          'User-Agent': 'My Joke App (https://github.com/username/repo)', 
+        },
+      });
+      return response.data.results;
+    } catch (error) {
+      console.error('Error fetching joke:', error); 
+      throw error; 
+    }
+  };
 export const fetchFavorites = async () => {
     try {
       const response = await axios.get(`${API_URL}/favorites`);
